@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,44 @@
     <link rel="stylesheet" href="./styles.css">
     <title>introduccion a Java</title>
 </head>
-<body>
-    <header class="header">
-        <h1 class="bienvenidos">Bienvenidos a mi nueva pagina</h1>
-    </header>
-</body>
-</html>
 
+<body>
+    <main class="app-container">
+        <header class="app-header">
+            <h1>Catalogo de Productos</h1>
+            <p class="subtitulo">Busqueda de productos</p>
+        </header>  
+        <div id="mensaje-feedback" class="feedback oculto"></div>
+        <button id="btn-modo" class = "btn-modo"> Modo oscuro </button>
+        <section class="card form-section">
+            <h2>Agregar Nuevo Ítem</h2>
+            <form id="formulario-producto" class="form-grid">
+                <div class="input-group">
+                    <label for="input-nombre">Nombre del producto</label>
+                    <input type="text" id="input-nombre" placeholder="Ej: Remera Blanca Estampada" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="input-precio">Precio ($)</label>
+                    <input type="number" id="input-precio" placeholder="Ej: 35000" min="1" step="any" required>
+                </div>
+
+                <button type="submit" id="btn-agregar" class="btn btn-primary">+ Agregar Producto</button>
+            </form>
+        </section>
+        <section class="filtro-section">
+            <label for="input-busqueda" class="sr-only">Buscar producto</label>
+            <input type="search" id="input-busqueda" placeholder="🔍 Escribe para filtrar por nombre..."
+                autocomplete="off">
+        </section>
+        <section class="card listado-section">
+            <div class="listado-header">
+                <h2>Listado de Ítems</h2>
+                <span id="contador-productos" class="badge">0 productos</span>
+            </div>
+            <div id="contenedor-items" class="contenedor-items"></div>
+        </section>
+    </main>
+</body>
+
+</html>

@@ -1,48 +1,134 @@
-let nombre = prompt("Ingrese nombre");
-let apellido = prompt("Ingrese su apellido");
-function saludar(nombre, apellido) {
-alert("Hola" + " " + nombre + " " + apellido + " " + "Bienvenido a la tienda");
+const productos = [
+    { id: 1, nombre: "Remera Negra Lisa", precio: 15000 },
+    { id: 2, nombre: "Remera Blanca Lisa", precio: 15000 },
+    { id: 3, nombre: "Remera Negra Estampada", precio: 20000 }
+];
+
+
+const contenedorItems = document.getElementById("contenedor-items");
+const btnModo = document.querySelector (".btn-modo");
+const formulario = document.getElementById("formulario-producto");
+const inputNombre = document.getElementById("input-nombre");
+const inputPrecio = document.getElementById("input-precio");
+const inputBusqueda = document.getElementById("input-busqueda");
+const mensajeFeedback = document.getElementById("mensaje-feedback");
+const contadorProductos = document.getElementById("contador-productos");
+
+btnModo.addEventListener("click", () =>{
+    document.body.classList.toggle("oscuro");
+    if(document.body.classList.contains ("Oscuro")){
+        btnModo.innerHTML = "Modo Claro "
+    } else {
+        btnModo.innerHTML = "Modo Oscuro"
+        }
+});
+
+let timeoutFeedback;
+
+
+function mostrarFeedback(mensaje, tipo = "exito") {
+    clearTimeout(timeoutFeedback);
+    mensajeFeedback.textContent = mensaje;
+    mensajeFeedback.className = `feedback ${tipo}`;
+
+    timeoutFeedback = setTimeout(() => {
+        mensajeFeedback.className = "feedback oculto";
+    }, 2500);
 }
-saludar(nombre, apellido);
-class Producto {
-    constructor (nombre, precio, categoria, stock){
-        this.nombre = nombre;
-        this.precio = precio;
-        this.categoria = categoria;
-        this.stock = stock;
+
+function renderizarProductos(lista) {
+    contenedorItems.innerHTML = "";
+
+    contadorProductos.textContent = `${lista.length} producto${lista.length === 1 ? '' : 's'}`;
+
+    if (lista.length === 0) {
+        contenedorItems.innerHTML = `
+        <div class="sin-items">
+        <p>No se encontraron productos disponibles.</p>
+        </div>
+    `;
+        return;
     }
-}
-const producto1 = new Producto ("Remera Negra Lisa", 15000, "Remeras", 5)
-const producto2 = new Producto ("Remera Negra Estampada", 20000, "Remeras", 3)
-const producto3 = new Producto ("Remera Blanca Lisa", 15000, "Remeras", 5 )
-const producto4 = new Producto ("Remera Blanca Estampada", 20000, "Remeras", 3)
-const productos = [producto1,producto2,producto3,producto4];
 
-let verProductos = prompt ("¿Desea ver los productos? Si / No ");
-if (verProductos && verProductos.toLowerCase().trim() === "si") {
-    productos.forEach((producto) => { console.log("los productos son: " , producto)});
-}
-else { 
-    console.log ("Gracias por visitarnos, ¡ Hasta luego !")
-}
-let buscarProducto = prompt ("¿Que producto esta buscando? Remera Negra Lisa, Remera Negra Estampada, Remera Blanca Lisa, Remera Blanca Estampada ")
-const encontrado = productos.find ((producto) => producto.nombre.toLowerCase() == buscarProducto.toLowerCase().trim ())
-if (encontrado) {
-console.log (encontrado)
-}
-else {
-console.log("No se encontró el producto")
-};
-const resultado = productos.filter ((producto) => producto.nombre.includes ("Estampada") );
-if (resultado.length > 0 ) {
-console.log (resultado)
-}
-else {
-console.log ("No se encontró el producto.")
-}
-const precioTotal = productos.reduce ((total, producto) => total + producto.precio, 0 );
-console.log ("El precio total del stock es" + " " + precioTotal );
+    lista.forEach((producto) => {
+        const card = document.createElement("div");
+        card.classList.add("item-card");
 
-const productosOrdenados = productos.toSorted ((a,b) => b.precio - a.precio);
-console.log ("productos ordenados de mayor a menor: ")
-console.table (productosOrdenados);
+        card.innerHTML = `
+        <div class="item-info">
+        <h3>${producto.nombre}</h3>
+        <p>$${Number(producto.precio).toLocaleString("es-AR")}</p>
+        </div>
+        <button class="btn btn-danger btn-eliminar" data-id="${producto.id}">
+        Eliminar
+        </button>
+    `;
+
+        contenedorItems.appendChild(card);
+    });
+
+    asignarEventosEliminar();
+}
+
+
+function asignarEventosEliminar() {
+    const botonesEliminar = document.querySelectorAll(".btn-eliminar");
+
+    botonesEliminar.forEach((boton) => {
+        boton.addEventListener("click", (e) => {
+            const idAEliminar = parseInt(e.target.dataset.id);
+            const indice = productos.findIndex((p) => p.id === idAEliminar);
+
+            if (indice !== -1) {
+                const itemRemovido = productos[indice].nombre;
+                productos.splice(indice, 1);
+
+
+                aplicarFiltro();
+                mostrarFeedback(`"${itemRemovido}" ha sido eliminado.`, "alerta");
+            }
+        });
+    });
+}
+
+formulario.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const nombreVal = inputNombre.value.trim();
+    const precioVal = parseFloat(inputPrecio.value);
+
+    if (!nombreVal || isNaN(precioVal) || precioVal <= 0) {
+        mostrarFeedback("Por favor ingrese datos válidos.", "alerta");
+        return;
+    }
+
+    const nuevoProducto = {
+        id: Date.now(),
+        nombre: nombreVal,
+        precio: precioVal
+    };
+
+    productos.push(nuevoProducto);
+
+    formulario.reset();
+    inputNombre.focus();
+
+
+    inputBusqueda.value = "";
+    renderizarProductos(productos);
+
+    mostrarFeedback(`"${nuevoProducto.nombre}" agregado con éxito.`, "exito");
+});
+
+
+function aplicarFiltro() {
+    const termino = inputBusqueda.value.toLowerCase().trim();
+    const filtrados = productos.filter((p) =>
+        p.nombre.toLowerCase().includes(termino)
+    );
+    renderizarProductos(filtrados);
+}
+
+inputBusqueda.addEventListener("input", aplicarFiltro);
+
+renderizarProductos(productos);
