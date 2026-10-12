@@ -1,9 +1,9 @@
-const productos = [
+const productosIniciales = [
     { id: 1, nombre: "Remera Negra Lisa", precio: 15000 },
     { id: 2, nombre: "Remera Blanca Lisa", precio: 15000 },
     { id: 3, nombre: "Remera Negra Estampada", precio: 20000 }
 ];
-
+const productos = JSON.parse(localStorage.getItem("productos")) ?? productosIniciales;
 
 const contenedorItems = document.getElementById("contenedor-items");
 const btnModo = document.querySelector (".btn-modo");
@@ -14,17 +14,25 @@ const inputBusqueda = document.getElementById("input-busqueda");
 const mensajeFeedback = document.getElementById("mensaje-feedback");
 const contadorProductos = document.getElementById("contador-productos");
 
-btnModo.addEventListener("click", () =>{
-    document.body.classList.toggle("oscuro");
-    if(document.body.classList.contains ("Oscuro")){
-        btnModo.innerHTML = "Modo Claro "
-    } else {
-        btnModo.innerHTML = "Modo Oscuro"
-        }
-});
 
 let timeoutFeedback;
 
+const modoGuardado = localStorage.getItem("modoOscuro");
+if (localStorage.getItem("modoOscuro") === "true") {
+    document.body.classList.add("oscuro");
+    btnModo.textContent = "Modo Claro";
+}
+
+btnModo.addEventListener("click", () => {
+    document.body.classList.toggle("oscuro");
+    const btnOscuro = document.body.classList.contains("oscuro");
+    btnModo.textContent = btnOscuro ? "Modo Claro" : "Modo Oscuro";
+    localStorage.setItem("modoOscuro", btnOscuro);
+});
+
+function guardarProductosEnStorage() {
+    localStorage.setItem("productos", JSON.stringify(productos));
+}
 
 function mostrarFeedback(mensaje, tipo = "exito") {
     clearTimeout(timeoutFeedback);
@@ -51,16 +59,17 @@ function renderizarProductos(lista) {
     }
 
     lista.forEach((producto) => {
+        const { id, nombre, precio } = producto;
         const card = document.createElement("div");
         card.classList.add("item-card");
 
         card.innerHTML = `
         <div class="item-info">
-        <h3>${producto.nombre}</h3>
-        <p>$${Number(producto.precio).toLocaleString("es-AR")}</p>
+            <h3>${nombre}</h3>
+            <p>$${Number(precio).toLocaleString("es-AR")}</p>
         </div>
-        <button class="btn btn-danger btn-eliminar" data-id="${producto.id}">
-        Eliminar
+        <button class="btn btn-danger btn-eliminar" data-id="${id}">
+            Eliminar
         </button>
     `;
 
@@ -80,12 +89,12 @@ function asignarEventosEliminar() {
             const indice = productos.findIndex((p) => p.id === idAEliminar);
 
             if (indice !== -1) {
-                const itemRemovido = productos[indice].nombre;
+                const { nombre } = productos[indice];
                 productos.splice(indice, 1);
-
-
+                
+                guardarProductosEnStorage(); // Persistencia
                 aplicarFiltro();
-                mostrarFeedback(`"${itemRemovido}" ha sido eliminado.`, "alerta");
+                mostrarFeedback(`"${nombre}" ha sido eliminado.`, "alerta");
             }
         });
     });
@@ -109,6 +118,7 @@ formulario.addEventListener("submit", (e) => {
     };
 
     productos.push(nuevoProducto);
+    guardarProductosEnStorage();
 
     formulario.reset();
     inputNombre.focus();
@@ -117,9 +127,9 @@ formulario.addEventListener("submit", (e) => {
     inputBusqueda.value = "";
     renderizarProductos(productos);
 
-    mostrarFeedback(`"${nuevoProducto.nombre}" agregado con éxito.`, "exito");
+    const { nombre } = nuevoProducto;
+    mostrarFeedback(`"${nombre}" agregado con éxito.`, "exito");
 });
-
 
 function aplicarFiltro() {
     const termino = inputBusqueda.value.toLowerCase().trim();
