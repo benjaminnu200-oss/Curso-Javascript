@@ -247,38 +247,70 @@ input:focus {
     clip: rect(0, 0, 0, 0);
     border: 0;
 }
+
 body.oscuro {
     background-color: #0f172a;
     color: #f8fafc;
 }
 
-body.oscuro
-body.oscuro .filtro-section input {
-    background-color: #1e293b;
-    border-color: #334155;
-    color: #f8fafc;
-}
 body.oscuro .app-header h1 {
-    color: #bbf7d0;
+    color: #38bdf8;
 }
 
-body.oscuro .card 
+body.oscuro .app-header .subtitulo {
+    color: #94a3b8;
+}
+
+
+body.oscuro .card {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+
+body.oscuro .card h2,
 body.oscuro .input-group label,
-body.oscuro .item-info h3 {
-    color: #f8f5f5;
+body.oscuro .listado-header h2 {
+    color: #f8fafc;
 }
-body.oscuro .listado-header {
-    color:#000000;
-}
+
+
 body.oscuro .item-card {
     background-color: #0f172a;
-    border-color: #334155;
+    border: 1px solid #334155;
+}
+
+body.oscuro .item-card h3 {
+    color: #f8fafc;
+}
+
+body.oscuro .item-card p {
+    color: #38bdf8;
 }
 
 body.oscuro input[type="text"],
 body.oscuro input[type="number"],
 body.oscuro input[type="search"] {
     background-color: #0f172a;
-    color: #ffffff;
-    border-color: #334155;
+    color: #f8fafc;
+    border: 1px solid #334155;
+}
+
+body.oscuro input::placeholder {
+    color: #64748b;
+}
+
+body.oscuro .btn-modo {
+    background-color: #334155;
+    color: #f8fafc;
+    border: 1px solid #475569;
+}
+
+body.oscuro .btn-secondary,
+body.oscuro .btn-editar {
+    background-color: #334155;
+    color: #f8fafc;
+    border: 1px solid #475569;
 }
