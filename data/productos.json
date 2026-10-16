@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "nombre": "Remera Negra Lisa",
+        "precio": 15000,
+        "stock": 12
+    },
+    {
+        "id": 2,
+        "nombre": "Remera Blanca Lisa",
+        "precio": 15000,
+        "stock": 8
+    },
+    {
+        "id": 3,
+        "nombre": "Remera Negra Estampada",
+        "precio": 20000,
+        "stock": 15
+    },
+    {
+        "id": 4,
+        "nombre": "Buzo deportivo tipo Lycra",
+        "precio": 38000,
+        "stock": 5
+    }
+]
