@@ -63,7 +63,7 @@ async function obtenerProductos() {
 
         guardarProductosEnStorage();
 
-        notificarToast("✅ Productos cargados con éxito", "exito");
+        notificarToast(" Productos cargados con éxito", "exito");
 
     } catch (error) {
         console.error("Error al obtener los productos:", error);
@@ -72,7 +72,7 @@ async function obtenerProductos() {
 
         contenedorItems.innerHTML = `
             <div class="sin-items">
-                <p>⚠️ Ocurrió un error al cargar los datos. Intente recargar la página.</p>
+                <p>Ocurrió un error al cargar los datos. Intente recargar la página.</p>
             </div>
         `;
     } finally {
@@ -209,8 +209,6 @@ formulario.addEventListener("submit", (e) => {
     try {
         const nombreVal = inputNombre.value.trim();
         const precioVal = parseFloat(inputPrecio.value);
-
-        // 1. Validamos que los campos no estén vacíos o sean inválidos
         if (!nombreVal || isNaN(precioVal) || precioVal <= 0) {
             throw new Error("Por favor ingrese un nombre y un precio válidos.");
         }
